@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<link href="Style.css" rel="stylesheet">
+
+<title>Employee Records</title>
+</head>
+<h2>Employee Records</h2>
+<body></body>
+<script>
+var myApp  =angular.module("myModule",[])
+.controller("myController",function($scope){
+
+var employees=
+[
+{ firstName:"Akshay", dateOfBirth: new Date("November 23, 1986"), gender: "Male", salary: 55000.788, city:"Ajmer" }, 
+{ firstName:"Akshita", dateOfBirth: new Date("May 26, 1970"), gender: "Female", salary: 45999.018,city:"Jaipur"  }, 
+{ firstName:"Deepak", dateOfBirth: new Date("January 31, 1985"), gender: "Male", salary: 55111.255,city:"New Delhi"  }, 
+{ firstName:"Yash",dateOfBirth: new Date("December 23, 1989"), gender: "Male", salary: 45889.123,city:"Hyderabad"  }, 
+{ firstName:"Sreenivas", dateOfBirth: new Date("October 29, 2000"), gender: "Male", salary: 12345.009,city:"Mumbai"  },
+{ firstName:"Sradha", dateOfBirth: new Date("April 19, 2003"), gender: "Female", salary: 54321.098,city:"Pune"  },
+{ firstName:"Namit", dateOfBirth: new Date("October 15, 1999"), gender: "Male", salary: 12365.099,city:"Chennai"  },
+{ firstName:"Virat", dateOfBirth: new Date("July 29, 1987"), gender: "Male", salary: 54678.003 ,city:"Ajmer" },
+{ firstName:"Lakshya", dateOfBirth: new Date("June 22, 2002"), gender: "Male", salary: 65432.022 ,city:"Hyderabad" },
+{ firstName:"Meehika", dateOfBirth: new Date("February 19, 2000"), gender: "Female", salary: 12354.007 ,city:"Bangalore" },
+{ firstName:"Mohan", dateOfBirth: new Date("March 24, 2001"), gender: "Male", salary: 32145.045,city:"Chennai"  },
+{ firstName:"Charu", dateOfBirth: new Date("May 18, 2004"), gender: "Female", salary: 12378.099 ,city:"Chennai" },
+{ firstName:"Deepsikha", dateOfBirth: new Date("October 29, 2000"), gender: "Male", salary: 33345.045,city:"New Delhi"  }
+
+];
+$scope.employees=employees;
+$scope.message="Stanome";
+$scope.rowLimit=13; 
+
+$scope.reversesort=false;
+$scope.sortData= function(column)
+{ 
+$scope.reverseSort= ($scope.sortColumn == column) ? !$scope.reverseSort:false;
+$scope.sortColumn=column;
+}
+$scope.getSortClass= function(column)
+{ 
+if($scope.sortColumn == column)
+{
+return $scope.reverseSort ? 'arrow-down': 'arrow-up'}
+}
+return '';
+$scope.search= function(item)
+{
+if ($scope.searchText == undefined)
+{
+return true;
+}
+else
+{
+if(item.firstName.toLowerCase().indexOf($scope.searchText.toLowerCase()) != -1
+) 
+{
+return true;
+}
+}
+return false;
+}
+});
+</script>
+<div data-ng-app="myModule" data-ng-controller="myController">
+ Sort By:<select data-ng-model="sortColumn">
+<option value="firstName">Name ASC</option>
+<option value="gender">Gender ASC</option>
+<option value="dateOfBirth">Date Of Birth ASC</option>
+<option value="-firstName">Names DESC</option>
+</select>
+<br   /><br   />
+Search : <input type="text" placeholder="Employees-byName" data-ng-model="searchText.firstName" />
+<input type="text" placeholder="Employees-byCity" data-ng-model="searchText.city" />
+<input type="checkbox" data-ng-model="exactMatch"/>Exact Match
+
+<br    /><br    />
+<input type="checkbox" data-ng-model="hideSalary" />Hide Salary
+<br   /><br   />
+
+Rows to Display:<input type="number" step="1" min="0" max="13" data-ng-model="rowLimit"/>
+<br    /><br   />
+<table>
+
+<thead>
+
+       
+ <tr>
+                <th data-ng-click="sortData('firstName')">Name
+                <div data-ng-class="getSortClass('firstName')"></div></th>
+                <th data-ng-click="sortData('dateOfBirth')"> Date Of Birth
+                <div data-ng-class="getSortClass('dateOfBirth')"></div></th>
+                 <th data-ng-click="sortData('gender')">Gender
+                <div data-ng-class="getSortClass('gender')"></div></th>
+                 <th data-ng-hide="hideSalary">Salary</th>
+                  <th data-ng-show="hideSalary">Salary</th>
+                  <th>City</th>
+                
+ </tr>
+
+
+</thead>
+<tbody>
+<tr data-ng-repeat="employee in employees |orderBy:sortColumn:reverseSort | filter:searchText:exactMatch |limitTo:rowLimit">
+<td>{{ employee.firstName |uppercase }}</td>
+<td> {{ employee.dateOfBirth |date:"dd/MM/yyyy" }}  </td>
+<td>{{ employee.gender |lowercase }}</td>
+<td data-ng-hide="hideSalary"> {{ employee.salary |number:2 }}   </td>
+<td data-ng-show="hideSalary">  </td>
+<td>{{ employee.city }}</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3>Thank You!</h3>
+</body>
+</html>
